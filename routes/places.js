@@ -30,7 +30,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 // Get All places
 
-router.get("/places", (req, res) => {
+router.get("/", (req, res) => {
   try {
     // let results = places.limit(100).skip(0);
     res.status(200).json(places.slice(0, 50));
