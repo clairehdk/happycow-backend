@@ -74,7 +74,7 @@ router.post("/location", async (req, res) => {
 router.get("/places/:placeId", async (req, res) => {
   try {
     const place = await places.find(
-      (element) => Number(element.placeId) === Number(req.params.id)
+      (element) => Number(element.placeId) === req.params.id
     );
     console.log(place);
     res.json(place);
