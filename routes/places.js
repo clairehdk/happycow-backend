@@ -69,4 +69,31 @@ router.post("/location", async (req, res) => {
   }
 });
 
+// Get place by ID
+
+router.get("/places/:placeId", async (req, res) => {
+  try {
+    const place = await places.find(
+      (element) => Number(element.placeId) === Number(req.params.id)
+    );
+    console.log(place);
+    res.json(place);
+    // for (let i = 0; i < places.length; i++) {
+    //   if ((await places[i].placeId) === req.params.id) {
+    //     res.status(200).json(places[i]);
+    //   } else {
+    //     res.status(400).json("fail");
+    //   }
+    // }
+    // }
+    // if (place.length > 1) {
+    //   res.status(200).json("Success");
+    // } else {
+    //   res.status(400).json("Fail");
+    // }
+  } catch (e) {
+    res.status(400).json(e.message);
+  }
+});
+
 module.exports = router;
