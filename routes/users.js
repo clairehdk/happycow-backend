@@ -21,7 +21,7 @@ router.post("/signup", async (req, res) => {
 
     if (username || email || password || birthyear) {
       if (userMail) {
-        res.status(400).json("This mail already has an account.");
+        res.status(400).json("This mail already has an account");
       } else if (userName) {
         res.status(400).json("Username already used");
       } else {
@@ -48,7 +48,7 @@ router.post("/signup", async (req, res) => {
         });
       }
     } else {
-      res.status(400).json("Missing parameters.");
+      res.status(400).json("Missing parameters");
     }
   } catch (e) {
     res.status(400).json(e);
@@ -78,7 +78,7 @@ router.post("/signin", async (req, res) => {
         res.status(401).json("Unauthorized");
       }
     } else {
-      res.status(400).json("Missing parameters.");
+      res.status(400).json("Missing parameters");
     }
   } catch (e) {
     res.status(400).json(e);

@@ -16,8 +16,10 @@ const User = mongoose.model("User", {
     },
   ],
   //   adress: [{ longitude: Number, latitude: Number }],
-  veg_status: String,
-  birth_year: String,
+  veg_status: {
+    type: String,
+  },
+  birth_year: { type: String },
   token: String,
   hash: String,
   salt: String,
