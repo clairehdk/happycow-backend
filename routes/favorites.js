@@ -4,6 +4,7 @@ const router = express.Router();
 const cors = require("cors");
 router.use(cors());
 router.use(formidable());
+const mongoose = require("mongoose");
 
 const places = require("../assets/places.json");
 
@@ -11,36 +12,34 @@ const places = require("../assets/places.json");
 
 const User = require("../models/User");
 const Favorite = require("../models/Favorite");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 // Creation d'un favoris
-router.post("/fav/add", async (req, res) => {
+router.post("/fav/add", isAuthenticated, async (req, res) => {
   try {
     const { name, thumbnail, placeId } = req.fields;
-    // const isPresent;
-    // for (i=0; i<places.length; i++ )
-    // { }
-    // if (!isPresent) {
-    if (name) {
-      const newFav = new Favorite({
-        placeId,
-        name,
-        thumbnail,
-      });
-      await newFav.save();
-      const user = await User.findById(req.user._id);
-      let tab = user.favorites;
-      tab.push(newFav._id);
-      await User.findByIdAndUpdate(req.user._id, {
-        favorites: tab,
-      });
-      res.status(200).json(newFav);
-    } else {
-      res.status(400).json("Champs manquants");
-    }
-    // } else {
+    // console.log(req.fields);
+    const newFav = new Favorite({
+      //   placeId: placeId,
+      name: name,
+      thumbnail: thumbnail,
+      user: req.user._id,
+    });
+    await newFav.save();
+    const user = await User.findById(req.user._id);
+    let tab = user.favorites;
+    tab.push(newFav._id);
+    await User.findByIdAndUpdate(req.user._id, {
+      favorites: tab,
+    });
+    res.status(200).json(newFav);
+
+    // }
+    // else {
     //   res.status(400).json("Favoris déjà présent.");
     // }
   } catch (e) {
+    console.log(e.message);
     res.status(400).json(e.message);
   }
 });
@@ -53,6 +52,7 @@ router.post("/user/favs", isAuthenticated, async (req, res) => {
     const favs = await Favorite.find({ user: userId }).populate({
       path: "user",
     });
+    console.log(favs);
     res.json(favs);
   } catch (e) {
     res.status(400).json(e.message);

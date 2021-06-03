@@ -17,8 +17,10 @@ mongoose.connect("mongodb://localhost:27017/happy-cow", {
 
 const placesRoutes = require("./routes/places");
 const usersRoutes = require("./routes/users");
+const favRoutes = require("./routes/favorites");
 app.use(placesRoutes);
 app.use(usersRoutes);
+app.use(favRoutes);
 
 app.all("*", (req, res) => {
   res.status(404).json("Page not found");

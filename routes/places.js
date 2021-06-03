@@ -109,51 +109,89 @@ router.get("/places/:placeId", async (req, res) => {
 
 // Get All places
 
-router.get("/", (req, res) => {
+// router.get("/", (req, res) => {
+//   try {
+//     console.log(req.query);
+//     const { name, type, limit } = req.query;
+//     let filters = [];
+//     if (name || type) {
+//       for (i = 0; i < places.length; i++) {
+//         if (places[i].name.includes(name)) {
+//           filters.push(places[i]);
+//         }
+//         if (places[i].type === req.query.type) {
+//           filters.push(places[i]);
+//         }
+//       }
+//     }
+//     //   filters = new RegExp(req.query.name, "i");
+//     //   filters.toString().split(" ");
+//     // }
+//     // console.log(req.query.name);
+//     // let results = places.limit(100).skip(0);
+//     // const { name } = req.query;
+//     // let filters = {};
+//     // const findByName = places.find(
+//     //   (elem) => elem.name == String(req.query.name)
+//     // );
+//     // let index = places[0].name.indexOf("Veganie");
+//     // console.log(index);
+
+//     // console.log(filters);
+//     // // console.log(index);
+//     // var findByName = places.filter(function (place) {
+//     //   return place.name.indexOf(req.query.name) === 1;
+
+//     //   filtered = myArray.filter(function (str) { return str.indexOf(PATTERN) === -1; });
+//     // });
+
+//     // console.log(findByName);
+//     if (filters.length > 1) {
+//       res.status(200).json(filters.slice(0, limit));
+//     } else {
+//       res.status(200).json(places.slice(0, limit));
+//     }
+//   } catch (e) {
+//     res.status(400).json(e);
+//   }
+// });
+
+router.get("/", async (req, res) => {
   try {
-    console.log(req.query);
     const { name, type, limit } = req.query;
-    let filters = [];
-    if (name || type) {
-      for (i = 0; i < places.length; i++) {
-        if (places[i].name.includes(name)) {
-          filters.push(places[i]);
-        }
-        if (places[i].type === req.query.type) {
-          filters.push(places[i]);
-        }
-      }
-    }
-    //   filters = new RegExp(req.query.name, "i");
-    //   filters.toString().split(" ");
-    // }
-    // console.log(req.query.name);
-    // let results = places.limit(100).skip(0);
-    // const { name } = req.query;
-    // let filters = {};
-    // const findByName = places.find(
-    //   (elem) => elem.name == String(req.query.name)
-    // );
-    // let index = places[0].name.indexOf("Veganie");
-    // console.log(index);
+    let newPlaces = [];
+    let count = 0;
+    if (name) {
+      let newName = new RegExp(name, "i");
 
-    // console.log(filters);
-    // // console.log(index);
-    // var findByName = places.filter(function (place) {
-    //   return place.name.indexOf(req.query.name) === 1;
+      // Filtre pour le nom
+      newPlaces = places.filter((place) => newName.test(place.name) === true);
+      count = newPlaces.length;
 
-    //   filtered = myArray.filter(function (str) { return str.indexOf(PATTERN) === -1; });
-    // });
+      // Filtre par le type
 
-    // console.log(findByName);
-    if (filters.length > 1) {
-      res.status(200).json(filters.slice(0, limit));
+      console.log(count);
+      res.status(200).json(newPlaces.slice(0, limit));
     } else {
+      // places.sort(tri).slice(0, 50);
       res.status(200).json(places.slice(0, limit));
     }
-  } catch (e) {
-    res.status(400).json(e);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
 module.exports = router;
+
+//Je récupère le test regex de ma recherche
+//Je push les restaus qui correspondent uniquement aux query récupérés dans typesTab
+// for (let i = 0; i < places.length; i++) {
+//   for (let j = 0; j < typesTab.length; j++) {
+//     if (
+//       places[i].type.indexOf(typesTab[j]) !== -1 &&
+//       newName.test(places[i].name) === true
+//     ) {
+//       newPlaces.push(places[i]);
+//     }
+//   }
+// }
