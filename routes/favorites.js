@@ -20,7 +20,7 @@ router.post("/fav/add", isAuthenticated, async (req, res) => {
     const { name, thumbnail, placeId } = req.fields;
     // console.log(req.fields);
     const newFav = new Favorite({
-      //   placeId: placeId,
+      placeId: placeId,
       name: name,
       thumbnail: thumbnail,
       user: req.user._id,
@@ -52,7 +52,7 @@ router.post("/user/favs", isAuthenticated, async (req, res) => {
     const favs = await Favorite.find({ user: userId }).populate({
       path: "user",
     });
-    console.log(favs);
+    // console.log(favs);
     res.json(favs);
   } catch (e) {
     res.status(400).json(e.message);

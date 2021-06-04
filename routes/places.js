@@ -161,19 +161,36 @@ router.get("/", async (req, res) => {
     const { name, type, limit } = req.query;
     let newPlaces = [];
     let count = 0;
+    let newName = new RegExp(name, "i");
+
+    // if (type || name){
+    //   if (type && name){}
+    //   else if (type){}
+    //   else if (name){}
+    // }
+
+    if (type && name) {
+      let newType = type.split(",");
+      console.log(newType);
+
+      newPlaces = places.filter(
+        (place) =>
+          newName.test(place.name) === true && newType.includes(place.type)
+      );
+      res.status(200).json(newPlaces.slice(0, limit));
+    }
+    // count = newPlaces.length;
     if (name) {
-      let newName = new RegExp(name, "i");
-
-      // Filtre pour le nom
-      newPlaces = places.filter((place) => newName.test(place.name) === true);
-      count = newPlaces.length;
-
-      // Filtre par le type
-
-      console.log(count);
+      newPlaces = places.filter((place) => newName.test(place.name));
+      res.status(200).json(newPlaces.slice(0, limit));
+      // console.log(newPlaces.slice(0, limit));
+    }
+    if (type) {
+      let newType = type.split(",");
+      console.log(newType);
+      newPlaces = places.filter((place) => newType.includes(place.type));
       res.status(200).json(newPlaces.slice(0, limit));
     } else {
-      // places.sort(tri).slice(0, 50);
       res.status(200).json(places.slice(0, limit));
     }
   } catch (error) {
@@ -182,16 +199,3 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
-
-//Je récupère le test regex de ma recherche
-//Je push les restaus qui correspondent uniquement aux query récupérés dans typesTab
-// for (let i = 0; i < places.length; i++) {
-//   for (let j = 0; j < typesTab.length; j++) {
-//     if (
-//       places[i].type.indexOf(typesTab[j]) !== -1 &&
-//       newName.test(places[i].name) === true
-//     ) {
-//       newPlaces.push(places[i]);
-//     }
-//   }
-// }
