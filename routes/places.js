@@ -28,6 +28,49 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   return dist;
 }
 
+router.get("/", async (req, res) => {
+  try {
+    const { name, type } = req.query;
+    const limit = req.query.limit || 100;
+    let newPlaces = [];
+    let count = 0;
+    let newName = new RegExp(name, "i");
+
+    // if (type || name){
+    //   if (type && name){}
+    //   else if (type){}
+    //   else if (name){}
+    // }
+
+    if (type && name) {
+      let newType = type.split(",");
+      // console.log(newType);
+
+      newPlaces = places.filter(
+        (place) =>
+          newName.test(place.name) === true && newType.includes(place.type)
+      );
+      res.status(200).json(newPlaces.slice(0, limit));
+    }
+    // count = newPlaces.length;
+    if (name) {
+      newPlaces = places.filter((place) => newName.test(place.name));
+      res.status(200).json(newPlaces.slice(0, limit));
+      // console.log(newPlaces.slice(0, limit));
+    }
+    if (type) {
+      let newType = type.split(",");
+      // console.log(newType);
+      newPlaces = places.filter((place) => newType.includes(place.type));
+      res.status(200).json(newPlaces.slice(0, limit));
+    } else {
+      res.status(200).json(places.slice(0, limit));
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 router.post("/location", async (req, res) => {
   try {
     const { currLat, currLong } = req.fields;
@@ -92,7 +135,7 @@ router.post("/adresses", async (req, res) => {
 
 router.get("/places/:placeId", async (req, res) => {
   try {
-    console.log(req.params.placeId);
+    // console.log(req.params.placeId);
     // const findPlace = places.find(
     //   (element) => Number(element.placeId) === req.params.placeId
     // );
@@ -100,101 +143,10 @@ router.get("/places/:placeId", async (req, res) => {
     const findPlace = places.find(
       (place) => `:${place.placeId}` === req.params.placeId
     );
-    console.log(findPlace);
+    // console.log(findPlace);
     res.json(findPlace);
   } catch (e) {
     res.status(400).json(e.message);
-  }
-});
-
-// Get All places
-
-// router.get("/", (req, res) => {
-//   try {
-//     console.log(req.query);
-//     const { name, type, limit } = req.query;
-//     let filters = [];
-//     if (name || type) {
-//       for (i = 0; i < places.length; i++) {
-//         if (places[i].name.includes(name)) {
-//           filters.push(places[i]);
-//         }
-//         if (places[i].type === req.query.type) {
-//           filters.push(places[i]);
-//         }
-//       }
-//     }
-//     //   filters = new RegExp(req.query.name, "i");
-//     //   filters.toString().split(" ");
-//     // }
-//     // console.log(req.query.name);
-//     // let results = places.limit(100).skip(0);
-//     // const { name } = req.query;
-//     // let filters = {};
-//     // const findByName = places.find(
-//     //   (elem) => elem.name == String(req.query.name)
-//     // );
-//     // let index = places[0].name.indexOf("Veganie");
-//     // console.log(index);
-
-//     // console.log(filters);
-//     // // console.log(index);
-//     // var findByName = places.filter(function (place) {
-//     //   return place.name.indexOf(req.query.name) === 1;
-
-//     //   filtered = myArray.filter(function (str) { return str.indexOf(PATTERN) === -1; });
-//     // });
-
-//     // console.log(findByName);
-//     if (filters.length > 1) {
-//       res.status(200).json(filters.slice(0, limit));
-//     } else {
-//       res.status(200).json(places.slice(0, limit));
-//     }
-//   } catch (e) {
-//     res.status(400).json(e);
-//   }
-// });
-
-router.get("/", async (req, res) => {
-  try {
-    const { name, type, limit } = req.query;
-    let newPlaces = [];
-    let count = 0;
-    let newName = new RegExp(name, "i");
-
-    // if (type || name){
-    //   if (type && name){}
-    //   else if (type){}
-    //   else if (name){}
-    // }
-
-    if (type && name) {
-      let newType = type.split(",");
-      console.log(newType);
-
-      newPlaces = places.filter(
-        (place) =>
-          newName.test(place.name) === true && newType.includes(place.type)
-      );
-      res.status(200).json(newPlaces.slice(0, limit));
-    }
-    // count = newPlaces.length;
-    if (name) {
-      newPlaces = places.filter((place) => newName.test(place.name));
-      res.status(200).json(newPlaces.slice(0, limit));
-      // console.log(newPlaces.slice(0, limit));
-    }
-    if (type) {
-      let newType = type.split(",");
-      console.log(newType);
-      newPlaces = places.filter((place) => newType.includes(place.type));
-      res.status(200).json(newPlaces.slice(0, limit));
-    } else {
-      res.status(200).json(places.slice(0, limit));
-    }
-  } catch (error) {
-    res.status(400).json({ error: error.message });
   }
 });
 
